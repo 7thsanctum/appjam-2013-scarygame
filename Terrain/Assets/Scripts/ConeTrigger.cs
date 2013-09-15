@@ -3,25 +3,30 @@ using System.Collections;
 
 public class ConeTrigger : MonoBehaviour {
 	
-	public Light light = null;
-	public float lightDarken = 200.0f;
-	
-	private float chargeDelay = 25.0f;
-	private float chargeTimer = 0.0f;
+	//TODO sort and rename these variables, remove uncessary variables etc
+	public Light playerLight 	= null;
+	public float lightDarken 	= 200.0f;
 	public string message;
-	private bool infoSwitch = false;
-	private bool messageSwitch = false;
-	private float messageTimer = 0.0f;
-	private float gameTimer = 0.0f;
-	private bool lightState = true;
-	private bool truckFull = false;
-	private float batteryLife = 0.0f;
-	//private float fuelLevels = 0.35f;
-	private float fuelCans = 0;
 	
+	private float chargeDelay 	= 25.0f;
+	private float chargeTimer 	= 0.0f;	
+	private bool  infoSwitch  	= false;
+	private bool  messageSwitch = false;
+	private float messageTimer 	= 0.0f;
+	private float gameTimer 	= 0.0f;
+	private bool  lightState 	= true;
+	private bool  truckFull 	= false;
+	private float batteryLife 	= 0.0f;
+	private float fuelCans 		= 0;
+	
+	//TODO put comments in here for what these things are for
 	// Use this for initialization
-	void Start () {
-		light.enabled = true;
+	void Start () 
+	{
+		renderer.enabled = false;
+		Screen.showCursor = false;
+		
+		playerLight.enabled = true;
 		truckFull = false;
 	}
 	
@@ -43,13 +48,12 @@ public class ConeTrigger : MonoBehaviour {
 		GUI.Label(new Rect(Screen.width/2, Screen.height/2, 300.0f, 500.0f), message);
 	}
 	
+	//TODO fix this update function as it has a lot of redundant code that doesn't need to be run every frame
 	// Update is called once per frame
 	void Update () {
-		renderer.enabled = false;
-		Screen.showCursor = false;
 		
 		//Set Battery Life
-		batteryLife = light.intensity;
+		batteryLife = playerLight.intensity;
 		chargeTimer += Time.deltaTime;
 		//User Input
         if (Input.GetKeyDown(KeyCode.F))
@@ -57,7 +61,7 @@ public class ConeTrigger : MonoBehaviour {
 			if(chargeTimer > 0.6f)
 			{
 				batteryLife += 0.3f;
-				light.intensity += 0.3f;
+				playerLight.intensity += 0.3f;
 				chargeTimer = 0.0f;
 			}
 		}
@@ -65,7 +69,7 @@ public class ConeTrigger : MonoBehaviour {
 		if (Input.GetKeyDown(KeyCode.E))
 		{
         	lightState = !lightState;
-            light.enabled = lightState;
+            playerLight.enabled = lightState;
 		}
 		
 		//Increase Game Timer
@@ -74,16 +78,16 @@ public class ConeTrigger : MonoBehaviour {
 		//Decrease light intensity
 		if (gameTimer > 3.5f && lightState == true) { 
 			batteryLife -= 0.4f;
-			light.intensity -= 0.4f;
+			playerLight.intensity -= 0.4f;
 			gameTimer = 0.0f;
 		}
 		
-		light.intensity = batteryLife;
+		playerLight.intensity = batteryLife;
 		
 		//Fire a ray from the cone outward and check what it collides with
 		Vector3 fwd = Camera.main.transform.TransformDirection(Vector3.forward);
 		RaycastHit hit;
-		if (Physics.Raycast(Camera.main.transform.position, fwd , out hit, light.range))
+		if (Physics.Raycast(Camera.main.transform.position, fwd , out hit, playerLight.range))
 		{
 			if(hit.collider.tag == "FuelCan")
 			{
@@ -109,7 +113,7 @@ public class ConeTrigger : MonoBehaviour {
 					fuelCans = 0;
 				}
 			}
-			print (truckFull);
+			
 			if(truckFull == false)
 			{
 				print ("Truck not full");
@@ -145,7 +149,7 @@ public class ConeTrigger : MonoBehaviour {
 	
 	void OnTriggerStay(Collider other)
 	{
-		if (light.enabled == true)
+		if (playerLight.enabled == true)
 		{
 			print ("Trigger is entered");
 			if(other.tag == "enemy")

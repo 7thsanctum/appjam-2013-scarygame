@@ -1,42 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
-public class FuelSpawner : MonoBehaviour {
+/*
+ * This fuelspawner class is to be in charge of how many fuel cans spawn, where they spawn etc 
+ * there will be a random amount spawned and they are more likely to spawn based upon distance 
+ * from the player etc 
+ * perhaps an additional feature will be if a player gets within a certain distance or sees a location in which fuel
+ * may spawn but there is none, that spawn point will become deactivated preventing fuel cans from spawning in places the player has been.
+ * 
+ */
+
+public class FuelSpawner : MonoBehaviour 
+{
 	
-	public List<GameObject> spawnPointList;
+	private List<GameObject> spawnPointList;
 	
-	// Use this for initialization
-	void Start () {
-		foreach(Transform childChild in this.gameObject.transform)
-		{			
-			foreach(Transform childChildChild in childChild)
-			{
-				foreach(Transform child in childChildChild)
-				{
-					if(child.gameObject.tag == "fuelspawners")
-					{
-						foreach(Transform children in child)
-						{
-							if(children.gameObject.tag == "fuelspawn")
-							{
-								Debug.Log ("Found Fuel Spawner !");
-								spawnPointList.Add(child.gameObject);	
-							}
-						}
-					}
-					if(child.gameObject.tag == "fuelspawn")
-					{
-						Debug.Log ("Found Fuel Spawner !");
-						spawnPointList.Add(child.gameObject);	
-					}
-				}
-			}
-		}
+	void Start () 
+	{
+		spawnPointList = GameObject.FindGameObjectsWithTag("fuelspawn").OfType<GameObject>().ToList();		
 	}
 	
-	// Update is called once per frame
-	void Update () {
+	void Update () 
+	{
 	
 	}
 }
