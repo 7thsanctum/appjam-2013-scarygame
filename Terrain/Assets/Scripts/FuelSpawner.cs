@@ -14,12 +14,19 @@ using System.Linq;
 
 public class FuelSpawner : MonoBehaviour 
 {
+	public GameObject fuelPrefab;
 	
 	private List<GameObject> spawnPointList;
 	
 	void Start () 
 	{
 		spawnPointList = GameObject.FindGameObjectsWithTag("fuelspawn").OfType<GameObject>().ToList();		
+		
+		foreach( GameObject spawn in spawnPointList )
+		{
+			GameObject can = Instantiate(fuelPrefab, spawn.transform.position, spawn.transform.rotation) as GameObject;
+			can.transform.parent = spawn.transform;
+		}
 	}
 	
 	void Update () 
